@@ -1,0 +1,407 @@
+// 전역 레이아웃 안정화: 스크롤 유무와 관계없이 스크롤바 공간을 항상 예약
+html {
+  scrollbar-gutter: stable;
+}
+
+// 공통 스타일
+body {
+  padding: 0;
+  margin: 0;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  background-color: #fbfbfb;
+  background-image: radial-gradient(#d1d1d1 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+// 글로벌 헤더 스타일
+header {
+  position: relative;
+  z-index: 100;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 26px 50px 30px 20px;
+  pointer-events: none;
+  background-color: transparent;
+
+  .logo {
+    display: inline-block;
+    padding: 9px 22px;
+    font-size: 20px;
+    font-weight: 900;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: -0.5px;
+    text-decoration: none;
+    pointer-events: auto;
+    background-color: #000;
+    border-radius: 999px;
+    transition: opacity 0.2s;
+
+    &:visited {
+      color: #fff;
+    }
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    // .logo가 부모 div이고 안에 <a>가 따로 있는 구조(main.html)까지 대응
+    a {
+      display: inline-block;
+      font-size: inherit;
+      font-weight: inherit;
+      color: inherit;
+      text-transform: inherit;
+      letter-spacing: inherit;
+      text-decoration: inherit;
+    }
+  }
+
+  nav {
+    padding-top: 10px;
+
+    ul {
+      display: flex;
+      padding: 0;
+      margin: 0;
+      pointer-events: auto;
+      list-style: none;
+
+      li {
+        margin-left: 40px;
+
+        a {
+          font-size: 16px;
+          font-weight: bold;
+          color: #000;
+          text-decoration: none;
+
+          &:hover {
+            opacity: 0.7;
+          }
+        }
+      }
+    }
+  }
+}
+
+// 배경 워터마크 텍스트
+.bg-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 0;
+  font-size: 12vw;
+  font-weight: 900;
+  color: rgba(0, 0, 0, 0.03);
+  text-transform: uppercase;
+  letter-spacing: -3px;
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: all 0.5s ease;
+}
+
+// 메인 페이지 전용 스타일
+.main-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+
+  main {
+    position: relative;
+    z-index: 10;
+    box-sizing: border-box;
+    display: flex;
+    height: calc(100vh - 90px);
+  }
+
+  .circular-menu-container {
+    position: relative;
+    width: 35%;
+    height: 100%;
+    overflow: visible;
+
+    .item-desc {
+      position: absolute;
+      top: 50%;
+      left: 30px;
+      z-index: 10;
+      width: 230px;
+      transform: translateY(-50%);
+
+      .label-detail {
+        display: block;
+        margin-bottom: 12px;
+        font-size: 11px;
+        font-weight: 800;
+        color: #999;
+        letter-spacing: 2px;
+      }
+
+      h2 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        font-size: 42px;
+        font-weight: 900;
+        line-height: 1.1;
+        letter-spacing: -1px;
+        word-break: keep-all;
+      }
+
+      p {
+        padding-left: 15px;
+        margin-bottom: 0;
+        font-size: 15px;
+        line-height: 1.6;
+        color: #555;
+        word-break: keep-all;
+        border-left: 2px solid #000;
+      }
+
+      .drag-hint {
+        display: inline-block;
+        padding: 10px 20px;
+        margin-top: 40px;
+        font-size: 13px;
+        font-weight: bold;
+        color: #fff;
+        pointer-events: none;
+        background-color: #000;
+        border-radius: 30px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        animation: pointRight 1.5s infinite ease-in-out;
+
+        @keyframes pointRight {
+          0%,
+          100% {
+            transform: translateX(0);
+          }
+          50% {
+            transform: translateX(8px);
+          }
+        }
+      }
+    }
+
+    .circular-menu {
+      position: absolute;
+      top: 55%;
+      left: -450px;
+      z-index: 1;
+      width: 800px;
+      height: 800px;
+      margin-top: -400px;
+      border: 1px solid #ccc;
+      border-radius: 50%;
+      transform-origin: center;
+      transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+
+      &::before {
+        position: absolute;
+        top: 25px;
+        right: 25px;
+        bottom: 25px;
+        left: 25px;
+        pointer-events: none;
+        content: "";
+        border: 1px dashed rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+      }
+
+      .menu-item {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 80px;
+        height: 80px;
+        margin-top: -40px;
+        margin-left: -40px;
+
+        // 클릭은 모든 원에서 가능하도록 허용 (드래그는 JS의 active 체크로 별도 제한)
+        pointer-events: auto;
+        cursor: pointer;
+        background-color: #e0e0e0;
+        border-radius: 50%;
+
+        transition:
+          transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1),
+          width 0.3s,
+          height 0.3s,
+          margin 0.3s,
+          background-color 0.3s,
+          border 0.3s;
+
+        &:not(.active):hover {
+          background-color: #d0d0d0;
+        }
+
+        img {
+          width: 70%;
+          height: 70%;
+          pointer-events: none;
+          object-fit: contain;
+          transition: all 0.3s ease;
+        }
+
+        &[data-id="octopus"] img,
+        &[data-id="bubblewrap"] img,
+        &[data-id="castle"] img,
+        &[data-id="belt"] img {
+          width: 95%;
+          height: 95%;
+        }
+
+        &[data-id="cake"] img {
+          width: 135%;
+          height: 135%;
+          transform: translateY(-10%);
+        }
+
+        &[data-id="turtle"] img {
+          width: 85%;
+          height: 85%;
+        }
+
+        &.active {
+          z-index: 2;
+          width: 130px;
+          height: 130px;
+          margin-top: -65px;
+          margin-left: -65px;
+          cursor: grab;
+          background-color: #fff;
+          border: 1px solid #000;
+          box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+
+          &:active {
+            cursor: grabbing;
+          }
+
+          img {
+            width: 85%;
+            height: 85%;
+          }
+
+          &[data-id="octopus"] img,
+          &[data-id="bubblewrap"] img,
+          &[data-id="castle"] img,
+          &[data-id="belt"] img {
+            width: 105%;
+            height: 105%;
+          }
+
+          &[data-id="cake"] img {
+            width: 150%;
+            height: 150%;
+            transform: translateY(-10%);
+          }
+
+          &[data-id="turtle"] img {
+            width: 95%;
+            height: 95%;
+          }
+        }
+      }
+    }
+  }
+
+  .center-image-container {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 65%;
+    height: 100%;
+    padding: 20px 20px 20px 0;
+
+    .canvas-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .image-wrapper {
+      position: relative;
+      display: flex;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      max-height: 85vh;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+
+      background-color: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      border-radius: 30px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.03);
+      transition: all 0.3s ease;
+
+      &.drag-over {
+        background-color: #fafafa;
+        border: 2px dashed #000;
+        transform: scale(0.98);
+      }
+
+      .silhouette {
+        position: absolute;
+        width: 85%;
+        height: 85%;
+        object-fit: contain;
+        object-position: center;
+      }
+
+      video.silhouette {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      video.silhouette.flip {
+        transform: scaleX(-1);
+      }
+    }
+
+    .metaphor-panel {
+      box-sizing: border-box;
+      flex-shrink: 0;
+      width: 100%;
+      max-height: 15vh;
+      padding: 16px 24px;
+      overflow-y: auto;
+      background-color: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.03);
+
+      .label-detail {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 10px;
+        font-weight: 800;
+        color: #999;
+        letter-spacing: 2px;
+      }
+
+      p {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.5;
+        color: #333;
+        word-break: keep-all;
+        transition: opacity 0.3s ease;
+      }
+    }
+  }
+}

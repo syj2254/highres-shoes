@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BOODPI - Components</title>
+    <link rel="stylesheet" href="components.css" />
+  </head>
+  <body>
+    <div class="components-container">
+      <!-- 헤더 -->
+      <header>
+        <div class="logo">
+          <a href="../../index.html">300DPI</a>
+        </div>
+        <nav>
+          <ul>
+            <li><a href="../about/index.html">About</a></li>
+            <li><a href="index.html" class="active">Components</a></li>
+            <li><a href="../archive/index.html">Archive</a></li>
+          </ul>
+        </nav>
+      </header>
+
+      <!-- 메인 콘텐츠 영역 -->
+      <main class="content-wrapper">
+        <!-- 왼쪽: 거대한 신발 실루엣 및 하단 체크리스트 메뉴 -->
+        <section class="left-section">
+          <div class="shoe-preview">
+            <img
+              src="../../images/신발실루엣.svg"
+              alt="신발 실루엣"
+              id="shoeSilhouette"
+            />
+          </div>
+
+          <!-- 체크박스 컴포넌트 목록 (초기 상태: 아무것도 선택되지 않음) -->
+          <div class="checkbox-grid" id="checkboxGrid">
+            <label class="checkbox-item"
+              ><input type="checkbox" name="component" value="toe-box" /> Toe
+              Box</label
+            >
+            <label class="checkbox-item"
+              ><input type="checkbox" name="component" value="sole-unit" /> Sole
+              Unit</label
+            >
+            <label class="checkbox-item"
+              ><input type="checkbox" name="component" value="upper" />
+              Upper</label
+            >
+            <label class="checkbox-item"
+              ><input type="checkbox" name="component" value="laces" />
+              Laces</label
+            >
+
+            <label class="checkbox-item"
+              ><input type="checkbox" name="component" value="padding" />
+              Padding</label
+            >
+            <label class="checkbox-item"
+              ><input type="checkbox" name="component" value="mid-sole" /> Mid
+              Sole</label
+            >
+            <label class="checkbox-item"
+              ><input type="checkbox" name="component" value="tongue" />
+              Tongue</label
+            >
+            <label class="checkbox-item"
+              ><input type="checkbox" name="component" value="foxing" />
+              Foxing</label
+            >
+
+            <label class="checkbox-item"
+              ><input type="checkbox" name="component" value="outsole" />
+              Outsole</label
+            >
+            <label class="checkbox-item"
+              ><input type="checkbox" name="component" value="extra-eyelet" />
+              Extra Eyelet</label
+            >
+            <label class="checkbox-item"
+              ><input type="checkbox" name="component" value="heel-counter" />
+              Heel Counter</label
+            >
+            <label class="checkbox-item"
+              ><input type="checkbox" name="component" value="quarter" />
+              Quarter</label
+            >
+          </div>
+        </section>
+
+        <!-- 오른쪽: 상세 정보 패널 -->
+        <section class="right-section">
+          <div class="info-card">
+            <div class="info-header">
+              <h1 id="compTitle">Select a component</h1>
+              <span id="compSubtitle">300DPI Archive</span>
+            </div>
+
+            <div class="info-body">
+              <p id="compDesc1">
+                왼쪽 목록에서 항목을 선택하면 해당 부위의 구조와 시각적 은유를
+                확인할 수 있습니다.
+              </p>
+              <p id="compDesc2"></p>
+            </div>
+
+            <!-- 하단 미니 프리뷰 박스 및 링크 -->
+            <div class="info-footer">
+              <div class="mini-preview-box"></div>
+              <a href="#" class="view-film-link">View Film &rarr;</a>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      // 메인페이지 12개 부품과 완전히 동일한 데이터 맵
+      // svg: 체크박스 선택 시 왼쪽 실루엣을 교체할 이미지 경로
+      const componentData = {
+        outsole: {
+          title: "Outsole",
+          subtitle: "Octopus Sucker",
+          desc1:
+            "아웃솔은 신발의 가장 아래, 지면과 직접 닿는 면이다. 표면에 배열된 돌출 패턴 하나하나가 독립된 접촉점이 되어 마찰력을 만든다. 돌출부 사이의 홈은 물이나 흙 같은 이물질이 빠져나가는 통로가 되어주고, 그 결과 접촉면이 지면에서 미끄러지지 않고 붙어 있을 수 있다. 걸음마다 돌출부는 무게에 눌려 살짝 형태를 바꾸는데, 이 미세한 변형이 지면의 굴곡에 맞춰 접촉 면적을 순간적으로 넓히는 역할을 한다.",
+          desc2:
+            "문어 빨판도 같은 구조이다. 하나의 큰 흡착판이 아니라 작은 빨판이 촘촘히 배열되어 어떤 표면에서도 잡아붙는다. 빨판 하나하나가 표면의 굴곡에 맞춰 독립적으로 밀착하고, 그렇게 모인 힘이 전체를 표면에 고정시킨다. 하나의 면이 아니라 수많은 점으로 표면을 잡는 것, 둘이 공유하는 원리이다.",
+          svg: "../../images/outsole.svg",
+        },
+        "toe-box": {
+          title: "Toe Box",
+          subtitle: "Protective Shell",
+          desc1:
+            "토 박스는 발가락을 외부 충격으로부터 보호하고 신발 앞쪽의 입체적인 형태를 단단하게 유지해 주는 공간이다. 표면을 감싸는 단단한 보강재가 콧날처럼 꼿꼿하게 지탱해주며, 보행 시 발가락이 꺾이는 유연한 움직임 속에서도 일정한 공간을 확보해 준다. 걸을 때마다 이 영역은 발가락의 굴곡에 맞춰 미세하게 압력을 분산시키며 착화감의 안정성을 더해준다.",
+          desc2:
+            "단단함과 유연함이 공존하는 구조이다. 외부의 날카로운 자극이나 충돌로부터 발끝을 철저히 방어하면서도, 내부에서는 발가락이 자유롭게 숨 쉴 수 있는 완충 지대를 제공한다. 껍질처럼 단단하게 형태를 유지하는 것과 내부의 부드러움을 동시에 지키는 것, 둘이 공유하는 원리이다.",
+          svg: "../../images/toe cap.svg",
+        },
+        upper: {
+          title: "Upper",
+          subtitle: "Armor",
+          desc1:
+            "어퍼는 발등과 발의 측면을 감싸 안는 신발의 상단 전체를 뜻한다. 표면에 직조된 섬세한 패브릭과 패널 하나하나가 발을 신발에 고정시키는 주된 역할을 하며, 통기성과 경량성을 동시에 결정짓는 핵심 영역이다. 걸음마다 발의 움직임에 따라 유연하게 늘어나고 줄어들며, 발 전체를 빈틈없이 포옹하듯 감싸 안는다.",
+          desc2:
+            "갑옷도 같은 구조이다. 하나의 판이 아니라 여러 조각이 관절처럼 겹쳐져 움직임을 방해하지 않으면서도 몸을 보호한다. 어퍼의 여러 패널이 겹겹이 이어져 발의 움직임에 맞춰 유연하게 반응하면서도 보호 기능을 하는 것, 둘이 공유하는 원리이다.",
+          svg: "../../images/upper.svg",
+        },
+        laces: {
+          title: "Laces",
+          subtitle: "Vine",
+          desc1:
+            "레이스는 신발끈과 그를 지지하는 결합 구조를 의미하며, 발의 높낮이와 볼륨에 따라 전체적인 피팅감을 섬세하게 조절하는 장치이다. 끈이 지나가는 길목마다 일정한 장력이 골고루 분산되도록 설계되어, 발등의 특정 부위가 과도하게 압박받는 것을 막아주고 전체적인 고정력을 극대화한다.",
+          desc2:
+            "넝쿨도 같은 구조이다. 하나의 줄기가 여러 지점을 타고 감아 오르며 팽팽한 장력으로 대상을 고정시킨다. 레이스가 여러 개의 아이렛을 지나며 장력을 고르게 분산시켜 발을 고정하는 것, 둘이 공유하는 원리이다.",
+          svg: "../../images/laces.svg",
+        },
+        "sole-unit": {
+          title: "Sole Unit",
+          subtitle: "Layer Cake",
+          desc1:
+            "솔 유닛은 미드솔과 아웃솔을 아우르는 하단 복합 구조체로, 지면에서 올라오는 강한 충격을 흡수하고 그 에너지를 다시 추진력으로 돌려주는 역할을 한다. 층층이 쌓인 소재의 밀도 차이가 체중의 수십 배에 달하는 하중을 효과적으로 분산시키며, 보행 시 발바닥 전체가 느끼는 피로감을 현저히 낮춰준다.",
+          desc2:
+            "케이크도 같은 구조이다. 여러 겹의 시트가 층층이 쌓여 눌렸을 때 압력을 켜켜이 분산시킨다. 솔 유닛의 밀도가 다른 층들이 겹쳐져 충격을 단계적으로 흡수하는 것, 둘이 공유하는 원리이다.",
+          svg: "../../images/sole unit.svg",
+        },
+        padding: {
+          title: "Padding",
+          subtitle: "Jelly",
+          desc1:
+            "패딩은 발목과 발등 주변의 내부에 두툼하게 내장된 쿠션 레이어로, 피부와 신발 단면 사이의 마찰을 줄이고 안락한 착화감을 부여하는 핵심 요소이다. 촘촘한 충전재가 발의 빈틈을 포근하게 채워주며, 보행 중에 발목이나 아킬레스건이 단단한 신발 테두리에 쓸리지 않도록 부드럽게 보호해 준다.",
+          desc2:
+            "젤리도 같은 구조이다. 눌렸을 때 형태가 순간적으로 눌렸다가 다시 원래대로 되돌아오는 탄성을 가진다. 패딩이 발의 압력을 흡수했다가 되돌리며 착화감을 만들어내는 것, 둘이 공유하는 원리이다.",
+          svg: "../../images/padding.svg",
+        },
+        "mid-sole": {
+          title: "Mid Sole",
+          subtitle: "Bubble Wrap",
+          desc1:
+            "미드솔은 아웃솔과 어퍼 사이에 위치한 완충 구조로, 걸음마다 발생하는 충격을 걸러내고 지면과의 접촉에서 오는 압력을 분산시키는 역할을 한다. 내부의 작은 셀 구조가 하중을 여러 지점으로 나누어 흡수하며, 이 분산 덕분에 특정 부위에 압력이 집중되지 않는다.",
+          desc2:
+            "뽁뽁이도 같은 구조이다. 작은 공기주머니들이 촘촘히 모여 눌리는 충격을 각자 나누어 흡수한다. 미드솔의 셀 구조도 여러 개의 작은 공간이 하중을 분산시켜 충격을 흡수하는 것, 둘이 공유하는 원리이다.",
+          svg: "../../images/mid sole.svg",
+        },
+        tongue: {
+          title: "Tongue",
+          subtitle: "Marshmallow",
+          desc1:
+            "텅은 발등을 직접적으로 넓게 감싸며 신발끈이 조여질 때 발생하는 강한 압박으로부터 발등을 보호하는 혓바닥 형태의 구조이다. 발목 움직임에 따라 유연하게 각도를 바꾸며, 끈이 피부에 직접 닿아 쓸리는 현상을 막아주는 부드러운 방패 역할을 해낸다.",
+          desc2:
+            "마쉬멜로우도 같은 구조이다. 누르면 부드럽게 눌리면서도 쉽게 찢어지지 않는 폭신한 탄성을 가진다. 텅이 발등을 부드럽게 감싸면서 끈의 압박을 완충하는 것, 둘이 공유하는 원리이다.",
+          svg: "../../images/tongue.svg",
+        },
+        foxing: {
+          title: "Foxing",
+          subtitle: "Umbrella",
+          desc1:
+            "폭싱은 어퍼와 아웃솔의 경계면을 밴드처럼 둘러싸며 접합력을 높이고 옆모습의 단단한 실루엣을 완성하는 테이프 구조이다. 두 부품이 만나는 가장 취약한 접합부에 방수와 방진 효과를 더해주며, 옆에서 가해지는 측면 충격을 고스란히 받아내어 신발의 수명을 연장한다.",
+          desc2:
+            "우산도 같은 구조이다. 표면을 감싸 빗물이 안으로 스며들지 않도록 막아주는 방수막 역할을 한다. 폭싱이 어퍼와 아웃솔의 이음새를 둘러싸며 물과 이물질의 침투를 막아주는 것, 둘이 공유하는 원리이다.",
+          svg: "../../images/foxing.svg",
+        },
+        "extra-eyelet": {
+          title: "Extra Eyelet",
+          subtitle: "Lock",
+          desc1:
+            "여분의 아일렛은 힐락(Heel Lock) 레이싱에서 신발끈으로 작은 고리를 만드는 지점이다. 반대쪽 끈을 그 고리에 통과시켜 조이면 뒤꿈치가 신발 안에서 들뜨지 않고 단단히 고정된다. 일반적인 아일렛 배열에 하나 더해진 이 여분의 구멍이 발목 부위의 유동을 붙잡아주는 핵심 지점이 된다.",
+          desc2:
+            "자물쇠도 같은 구조이다. 걸쇠를 고리에 걸어 잠그면 연결된 대상이 쉽게 풀리지 않도록 고정된다. 여분의 아일렛 역시 끈을 고리처럼 걸어 당김으로써 뒤꿈치라는 대상을 풀리지 않게 잠그는 것, 둘이 공유하는 원리이다.",
+          svg: "../../images/extra eyelet.svg",
+        },
+        "heel-counter": {
+          title: "Heel Counter",
+          subtitle: "Castle",
+          desc1:
+            "힐 카운터는 뒤꿈치 바깥을 감싸는 단단한 보강재로, 걸을 때마다 발이 좌우로 흔들리지 않도록 형태를 고정해 주는 역할을 한다. 신발 안에서 가장 많은 압력을 받는 부위인 뒤꿈치를 견고하게 붙잡아, 보행 중에도 신발이 벗겨지거나 뒤틀리지 않도록 지탱한다.",
+          desc2:
+            "성벽도 같은 구조이다. 외곽을 둘러싸는 단단한 벽으로 내부의 형태를 흐트러지지 않게 붙잡아 준다. 힐 카운터가 뒤꿈치 바깥을 감싸며 형태를 고정하는 것, 둘이 공유하는 원리이다.",
+          svg: "../../images/heel counter.svg",
+        },
+        quarter: {
+          title: "Quarter",
+          subtitle: "Bone",
+          desc1:
+            "쿼터는 어퍼의 앞부분을 제외한 양옆에서 뒤쪽까지 이어지는 측면 패널로, 발의 옆모습을 감싸며 형태를 지탱하는 역할을 한다. 좌우 대칭으로 배치된 이 패널이 발의 곡선을 따라 밀착하면서도, 걸을 때 발생하는 움직임에 유연하게 반응한다.",
+          desc2:
+            "갈비뼈도 같은 구조이다. 여러 개의 뼈대가 일정한 간격으로 이어져 몸통의 양옆면을 감싸는 곡선 구조를 이룬다. 쿼터가 어퍼의 옆면을 이루며 형태를 지탱하는 것, 둘이 공유하는 원리이다.",
+          svg: "../../images/quarter.svg",
+        },
+      };
+
+      const checkboxes = document.querySelectorAll(
+        '.checkbox-grid input[type="checkbox"]',
+      );
+      const compTitle = document.getElementById("compTitle");
+      const compSubtitle = document.getElementById("compSubtitle");
+      const compDesc1 = document.getElementById("compDesc1");
+      const compDesc2 = document.getElementById("compDesc2");
+      const shoeSilhouette = document.getElementById("shoeSilhouette");
+
+      checkboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", (e) => {
+          if (e.target.checked) {
+            checkboxes.forEach((box) => {
+              if (box !== e.target) box.checked = false;
+            });
+
+            const key = e.target.value;
+            const data = componentData[key];
+
+            if (data) {
+              compTitle.textContent = data.title;
+              compSubtitle.textContent = data.subtitle;
+              compDesc1.textContent = data.desc1;
+              compDesc2.textContent = data.desc2;
+
+              // 항목에 맞는 SVG로 왼쪽 실루엣 교체
+              if (data.svg) {
+                shoeSilhouette.src = data.svg;
+              }
+            }
+          }
+          // 체크 해제 시에도 강제로 다시 체크하지 않음 — 전부 해제된 초기 상태 허용
+        });
+      });
+    </script>
+  </body>
+</html>

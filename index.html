@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>300DPI - Main</title>
+    <link rel="stylesheet" href="style/main.css" />
+  </head>
+  <body>
+    <div class="main-container">
+      <div class="bg-watermark" id="bgWatermark">OCTOPUS SUCKER</div>
+
+      <header>
+        <div class="logo"><a href="index.html">300DPI</a></div>
+        <nav>
+          <ul>
+            <li><a href="pages/about/index.html">About</a></li>
+            <li><a href="pages/components/index.html">Components</a></li>
+            <li><a href="pages/archive/index.html">Archive</a></li>
+          </ul>
+        </nav>
+      </header>
+
+      <main>
+        <section class="circular-menu-container">
+          <div class="item-desc">
+            <span class="label-detail">COMPONENT DETAILS</span>
+            <h2 id="componentName">Octopus sucker</h2>
+            <p id="componentDesc">
+              표면에 밀착하여 미끄러지지 않게 잡아주는 흡착 구조
+            </p>
+            <div class="drag-hint">오브젝트를 캔버스로 드래그 ➔</div>
+          </div>
+
+          <div class="circular-menu" id="circularMenu">
+            <div class="menu-item" data-id="pudding" draggable="true">
+              <img src="images/젤리.png" alt="젤리" />
+            </div>
+            <div class="menu-item" data-id="egg" draggable="true">
+              <img src="images/우산.png" alt="우산" />
+            </div>
+            <div class="menu-item" data-id="belt" draggable="true">
+              <img src="images/갑옷.png" alt="갑옷" />
+            </div>
+            <div class="menu-item" data-id="castle" draggable="true">
+              <img src="images/성.png" alt="성" />
+            </div>
+            <div class="menu-item" data-id="bone" draggable="true">
+              <img src="images/뼈.png" alt="뼈" />
+            </div>
+            <div class="menu-item active" data-id="octopus" draggable="true">
+              <img src="images/문어.png" alt="문어" />
+            </div>
+            <div class="menu-item" data-id="tape" draggable="true">
+              <img src="images/넝쿨.png" alt="넝쿨" />
+            </div>
+            <div class="menu-item" data-id="marshmallow" draggable="true">
+              <img src="images/마쉬멜로우.png" alt="마쉬멜로우" />
+            </div>
+            <div class="menu-item" data-id="turtle" draggable="true">
+              <img src="images/거북이.png" alt="거북이" />
+            </div>
+            <div class="menu-item" data-id="cake" draggable="true">
+              <img src="images/케이크.png" alt="케이크" />
+            </div>
+            <div class="menu-item" data-id="bubblewrap" draggable="true">
+              <img src="images/뽁뽁이.png" alt="뽁뽁이" />
+            </div>
+            <div class="menu-item" data-id="lock" draggable="true">
+              <img src="images/자물쇠.png" alt="자물쇠" />
+            </div>
+          </div>
+        </section>
+
+        <!-- 중앙/우측 캔버스 영역 -->
+        <section class="center-image-container">
+          <div class="canvas-stack">
+            <div class="image-wrapper" id="dropZone">
+              <!-- 기본 이미지 -->
+              <img
+                src="images/신발실루엣.svg"
+                alt="신발 실루엣"
+                class="silhouette"
+                id="silhouetteImage"
+              />
+              <!-- 비디오 태그 -->
+              <video
+                src="images/문어영상.mp4"
+                class="silhouette"
+                id="silhouetteVideo"
+                autoplay
+                loop
+                muted
+                playsinline
+                style="display: none"
+              ></video>
+            </div>
+
+            <!-- 영상 박스 아래: 드롭 이후에만 나타나는 은유 설명 패널 -->
+            <div
+              class="metaphor-panel"
+              id="metaphorPanel"
+              style="display: none"
+            >
+              <span class="label-detail">WHY THIS METAPHOR</span>
+              <p id="metaphorText"></p>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const menu = document.getElementById("circularMenu");
+        const items = document.querySelectorAll(".menu-item");
+
+        const silhouetteImg = document.getElementById("silhouetteImage");
+        const silhouetteVid = document.getElementById("silhouetteVideo");
+
+        const componentName = document.getElementById("componentName");
+        const componentDesc = document.getElementById("componentDesc");
+        const metaphorPanel = document.getElementById("metaphorPanel");
+        const metaphorText = document.getElementById("metaphorText");
+        const bgWatermark = document.getElementById("bgWatermark");
+        const dropZone = document.getElementById("dropZone");
+        const mainContainer = document.querySelector(
+          ".circular-menu-container",
+        );
+
+        const radius = 400;
+        const angleIncrement = 360 / items.length;
+        let currentRotation = 0;
+        let activeIndex = 5;
+
+        // 각 컴포넌트 정보 및 매칭되는 영상 파일명 정의
+        const componentsData = {
+          pudding: {
+            name: "Jelly padding",
+            desc: "부드럽고 탄력 있는 젤리 구조",
+            video: "images/젤리영상.mp4",
+            metaphor:
+              "젤리는 눌렸을 때 형태가 순간적으로 눌렸다가 다시 원래대로 되돌아오는 탄성을 가진다. 패딩 역시 발의 압력을 흡수했다가 되돌리며 착화감을 만들어내는 구조라, 이 탄성의 유사함을 젤리로 은유했다.",
+          },
+          egg: {
+            name: "Umbrella foxing",
+            desc: "방수의 역할을 하는 우산 구조",
+            video: "images/우산영상.mp4",
+            metaphor:
+              "우산은 표면을 감싸 빗물이 안으로 스며들지 않도록 막아주는 방수막 역할을 한다. 폭싱도 어퍼와 아웃솔의 이음새를 둘러싸며 물과 이물질의 침투를 막아주는 방수 기능을 하기 때문에 우산으로 은유했다.",
+          },
+          belt: {
+            name: "Armor upper",
+            desc: "관절 구조로 겹겹이 발을 감싸 보호하는 갑옷 구조",
+            video: "images/갑옷영상.mp4",
+            metaphor:
+              "갑옷은 하나의 판이 아니라 여러 조각이 관절처럼 겹쳐져 움직임을 방해하지 않으면서도 몸을 보호한다. 어퍼도 여러 패널이 겹겹이 이어져 발의 움직임에 따라 유연하게 반응하면서 보호 기능을 하기에 갑옷으로 은유했다.",
+          },
+          castle: {
+            name: "Castle heel counter",
+            desc: "뒤꿈치를 감싸 형태를 고정하는 견고한 성 구조",
+            video: "images/성영상.mp4",
+            metaphor:
+              "성벽은 외곽을 둘러싸는 단단한 벽으로 내부의 형태를 흐트러지지 않게 붙잡아 준다. 힐 카운터 역시 뒤꿈치 바깥을 감싸는 단단한 보강재로, 걸을 때마다 발이 좌우로 흔들리지 않도록 형태를 고정해 주는 원리가 같아 성으로 은유했다.",
+          },
+          bone: {
+            name: "Bone quarter",
+            desc: "유연하면서도 형태를 유지하는 뼈 구조",
+            video: "images/갈비뼈영상.mp4",
+            metaphor:
+              "갈비뼈는 여러 개의 뼈대가 일정한 간격으로 이어져 몸통의 양옆면을 감싸는 곡선 구조를 이룬다. 쿼터도 어퍼의 양옆면을 이루며 발의 옆모습을 감싸는 패널이기 때문에, 옆면을 이루는 뼈대라는 점에서 뼈로 은유했다.",
+          },
+          octopus: {
+            name: "Octopus outsole",
+            desc: "표면에 밀착하여 미끄러지지 않게 잡아주는 흡착 구조",
+            video: "images/문어영상.mp4",
+            metaphor:
+              "문어의 빨판은 하나의 큰 흡착판이 아니라 수많은 작은 빨판이 촘촘히 배열되어 어떤 표면에도 밀착한다. 아웃솔의 돌기 패턴도 동일한 원리로, 개별 돌기가 각자 지면과 접촉하며 마찰력을 만들어내기 때문에 문어 빨판을 시각적 은유로 사용했다.",
+          },
+          tape: {
+            name: "Vine laces",
+            desc: "여러 지점을 휘감으며 장력을 전달하는 넝쿨 구조",
+            video: "images/넝쿨영상.mp4",
+            metaphor:
+              "넝쿨은 하나의 줄기가 여러 지점을 타고 감아 오르며 팽팽한 장력으로 대상을 고정시킨다. 레이스도 여러 개의 아이렛을 지나며 장력을 고르게 분산시켜 발을 고정하는 구조라 넝쿨로 은유했다.",
+          },
+          marshmallow: {
+            name: "Marshmallow tongue",
+            desc: "부드럽고 편안한 마쉬멜로우 구조",
+            video: "images/마쉬멜로우영상.mp4",
+            metaphor:
+              "마쉬멜로우는 누르면 부드럽게 눌리면서도 쉽게 찢어지지 않는 폭신한 탄성을 가진다. 텅도 발등을 부드럽게 감싸면서 끈의 압박을 완충하는 역할을 하기 때문에 마쉬멜로우로 은유했다.",
+          },
+          turtle: {
+            name: "Turtle shell toe cap",
+            desc: "충격으로부터 발가락을 보호하는 거북이 껍질 구조",
+            video: "images/거북이영상.mp4",
+            metaphor:
+              "거북이 등껍질은 단단한 겉면으로 외부 충격을 막아내면서도 그 안의 몸은 자유롭게 움직일 수 있게 해준다. 토캡도 단단한 보강재로 발끝을 보호하면서 내부에는 여유 공간을 두기 때문에 거북이로 은유했다.",
+          },
+          cake: {
+            name: "Cake sole unit",
+            desc: "여러 겹으로 충격을 흡수하는 케이크 구조",
+            video: "images/케이크영상.mp4",
+            metaphor:
+              "케이크는 여러 겹의 시트가 층층이 쌓여 눌렸을 때 압력을 켜켜이 분산시킨다. 쿠셔닝 구조도 밀도가 다른 층들이 겹쳐져 충격을 단계적으로 흡수하는 방식이라 케이크로 은유했다.",
+          },
+          bubblewrap: {
+            name: "Bubble wrap mid sole",
+            desc: "폭신하고 보호 기능이 있는 뽁뽁이 구조",
+            video: "images/에어캡영상.mp4",
+            metaphor:
+              "뽁뽁이는 작은 공기주머니들이 촘촘히 모여 눌리는 충격을 각자 나누어 흡수한다. 미드솔의 쿠셔닝 셀 구조도 여러 개의 작은 공간이 하중을 분산시켜 충격을 흡수하기 때문에 뽁뽁이로 은유했다.",
+          },
+          lock: {
+            name: "Lock extra eyelet",
+            desc: "힐락 레이싱에서 뒤꿈치를 들뜨지 않게 고정하는 여분의 아일렛 구조",
+            video: "images/자물쇠영상.mp4",
+            metaphor:
+              "자물쇠는 걸쇠를 고리에 걸어 잠그면 연결된 대상을 쉽게 풀리지 않도록 고정한다. 여분의 아일렛은 힐락(Heel Lock) 레이싱에서 신발끈으로 작은 고리를 만드는 지점으로, 반대쪽 끈을 그 고리에 통과시켜 조이면 뒤꿈치가 들뜨지 않게 잡아주기에 자물쇠로 은유했다.",
+          },
+        };
+
+        // 좌우반전을 적용하지 않을(=원본 그대로 보여줄) 영상 목록
+        const flipTargets = ["images/에어캡영상.mp4", "images/우산영상.mp4"];
+
+        const baseAngles = [];
+        items.forEach((item, i) => {
+          let angle = (i - activeIndex) * angleIncrement;
+          baseAngles.push(angle);
+        });
+
+        function updatePositions(rotation) {
+          menu.style.transform = `rotate(${rotation}deg)`;
+          items.forEach((item, i) => {
+            let angle = baseAngles[i];
+            item.style.transform = `rotate(${angle}deg) translateX(${radius}px) rotate(${-angle - rotation}deg)`;
+          });
+        }
+
+        // 원 메뉴 이동 시에는 좌측 이름/설명만 갱신 — 은유 패널은 건드리지 않음
+        function updateActiveItem(index) {
+          items.forEach((item, i) => {
+            item.classList.toggle("active", i === index);
+            if (i === index) {
+              const dataId = item.getAttribute("data-id");
+              const dataName = componentsData[dataId].name;
+              componentName.textContent = dataName;
+              componentDesc.textContent = componentsData[dataId].desc;
+
+              bgWatermark.textContent = dataName;
+              bgWatermark.style.opacity = "0";
+              setTimeout(() => {
+                bgWatermark.style.opacity = "1";
+              }, 150);
+            }
+          });
+        }
+
+        updatePositions(currentRotation);
+        updateActiveItem(activeIndex);
+
+        mainContainer.addEventListener("wheel", (e) => {
+          e.preventDefault();
+          const delta = e.deltaY > 0 ? 1 : -1;
+          currentRotation -= delta * angleIncrement;
+
+          activeIndex += delta;
+          if (activeIndex < 0) activeIndex = items.length - 1;
+          if (activeIndex >= items.length) activeIndex = 0;
+
+          updatePositions(currentRotation);
+          updateActiveItem(activeIndex);
+        });
+
+        items.forEach((item, index) => {
+          // 드래그는 active(캔버스 재생 가능) 상태일 때만 허용 — 클릭으로 넘기는 것과 별개
+          item.addEventListener("dragstart", (e) => {
+            if (!item.classList.contains("active")) {
+              e.preventDefault();
+              return;
+            }
+            e.dataTransfer.setData("id", item.getAttribute("data-id"));
+            item.style.opacity = "0.5";
+          });
+
+          item.addEventListener("dragend", () => {
+            item.style.opacity = "1";
+          });
+
+          // 클릭으로도 오브젝트 선택(회전) 가능 — 영상은 재생하지 않음
+          item.addEventListener("click", () => {
+            if (index === activeIndex) return;
+
+            let diff = index - activeIndex;
+            const halfLength = items.length / 2;
+
+            if (diff > halfLength) {
+              diff -= items.length;
+            } else if (diff < -halfLength) {
+              diff += items.length;
+            }
+
+            currentRotation -= diff * angleIncrement;
+            activeIndex = index;
+
+            updatePositions(currentRotation);
+            updateActiveItem(activeIndex);
+          });
+        });
+
+        dropZone.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          dropZone.classList.add("drag-over");
+        });
+
+        dropZone.addEventListener("dragleave", () => {
+          dropZone.classList.remove("drag-over");
+        });
+
+        dropZone.addEventListener("drop", (e) => {
+          e.preventDefault();
+          dropZone.classList.remove("drag-over");
+
+          const draggedId = e.dataTransfer.getData("id");
+          if (!draggedId) return;
+
+          const currentData = componentsData[draggedId];
+          if (!currentData) return;
+
+          // 모든 아이템 드롭 시 해당 비디오를 재생하도록 연동
+          silhouetteImg.style.display = "none";
+          silhouetteVid.style.display = "block";
+          silhouetteVid.src = currentData.video;
+          silhouetteVid.currentTime = 0;
+          silhouetteVid.play().catch(() => {});
+
+          // 에어캡, 우산 영상만 좌우반전 제외
+          silhouetteVid.classList.toggle(
+            "flip",
+            !flipTargets.includes(currentData.video),
+          );
+
+          // 텍스트 및 워터마크 업데이트
+          componentName.textContent = currentData.name;
+          componentDesc.textContent = currentData.desc;
+          bgWatermark.textContent = currentData.name;
+
+          // 드롭 시에만 은유 설명 패널을 채우고 표시
+          metaphorText.textContent = currentData.metaphor;
+          metaphorPanel.style.display = "block";
+        });
+      });
+    </script>
+  </body>
+</html>

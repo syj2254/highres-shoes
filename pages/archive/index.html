@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>300DPI - Archive</title>
+    <link rel="stylesheet" href="../../style/main.css" />
+    <!-- 글로벌 스타일 (도트 배경) -->
+    <link rel="stylesheet" href="archive.css" />
+    <!-- Archive 페이지 전용 스타일 -->
+  </head>
+  <body>
+    <div class="archive-container">
+      <!-- 배경 워터마크 추가 (메인/어바웃 페이지와 통일감) -->
+      <div class="bg-watermark">ARCHIVE</div>
+
+      <!-- 상단 영역 -->
+      <div class="top-section">
+        <!-- 글로벌 헤더 -->
+        <header>
+          <a href="../../index.html" class="logo">300DPI</a>
+          <nav>
+            <ul>
+              <li><a href="../about/index.html">About</a></li>
+              <li><a href="../components/index.html">Components</a></li>
+              <li><a href="index.html">Archive</a></li>
+            </ul>
+          </nav>
+        </header>
+
+        <!-- 아카이브 히어로 섹션 -->
+        <section class="archive-hero">
+          <h1>ARCHIVE</h1>
+        </section>
+      </div>
+
+      <main class="archive-content">
+        <!-- 필터 버튼 영역 -->
+        <section class="filter-section" id="filterSection">
+          <button class="active" data-filter="all">All</button>
+          <button data-filter="protection">Protection</button>
+          <button data-filter="support">Support</button>
+          <button data-filter="connection">Connection</button>
+        </section>
+
+        <!-- 4열 x 3행 썸네일 그리드 영역 (12개, 카테고리별 필터링) -->
+        <section class="archive-grid" id="archiveGrid">
+          <div class="grid-item" data-id="turtle" data-category="protection">
+            <video
+              class="grid-thumb"
+              src="../../images/거북이영상.mp4"
+              loop
+              muted
+              playsinline
+              preload="metadata"
+            ></video>
+            <span class="comp-name">Toe Box</span>
+            <span class="comp-meta">Turtle Shell</span>
+          </div>
+          <div
+            class="grid-item"
+            data-id="marshmallow"
+            data-category="protection"
+          >
+            <video
+              class="grid-thumb"
+              src="../../images/마쉬멜로우영상.mp4"
+              loop
+              muted
+              playsinline
+              preload="metadata"
+            ></video>
+            <span class="comp-name">Tongue</span>
+            <span class="comp-meta">Marshmallow</span>
+          </div>
+          <div class="grid-item" data-id="octopus" data-category="connection">
+            <video
+              class="grid-thumb"
+              src="../../images/문어영상.mp4"
+              loop
+              muted
+              playsinline
+              preload="metadata"
+            ></video>
+            <span class="comp-name">Outsole</span>
+            <span class="comp-meta">Octopus Sucker</span>
+          </div>
+
+          <div class="grid-item" data-id="cake" data-category="support">
+            <video
+              class="grid-thumb"
+              src="../../images/케이크영상.mp4"
+              loop
+              muted
+              playsinline
+              preload="metadata"
+            ></video>
+            <span class="comp-name">Sole Unit</span>
+            <span class="comp-meta">Layer Cake</span>
+          </div>
+          <div class="grid-item" data-id="bone" data-category="support">
+            <video
+              class="grid-thumb"
+              src="../../images/갈비뼈영상.mp4"
+              loop
+              muted
+              playsinline
+              preload="metadata"
+            ></video>
+            <span class="comp-name">Quarter</span>
+            <span class="comp-meta">Bone</span>
+          </div>
+          <div class="grid-item" data-id="bubblewrap" data-category="support">
+            <video
+              class="grid-thumb"
+              src="../../images/에어캡영상.mp4"
+              loop
+              muted
+              playsinline
+              preload="metadata"
+            ></video>
+            <span class="comp-name">Mid Sole</span>
+            <span class="comp-meta">Bubble Wrap</span>
+          </div>
+
+          <div class="grid-item" data-id="egg" data-category="protection">
+            <video
+              class="grid-thumb"
+              src="../../images/우산영상.mp4"
+              loop
+              muted
+              playsinline
+              preload="metadata"
+            ></video>
+            <span class="comp-name">Foxing</span>
+            <span class="comp-meta">Umbrella</span>
+          </div>
+          <div class="grid-item" data-id="belt" data-category="protection">
+            <video
+              class="grid-thumb"
+              src="../../images/갑옷영상.mp4"
+              loop
+              muted
+              playsinline
+              preload="metadata"
+            ></video>
+            <span class="comp-name">Upper</span>
+            <span class="comp-meta">Armor</span>
+          </div>
+          <div class="grid-item" data-id="tape" data-category="connection">
+            <video
+              class="grid-thumb"
+              src="../../images/넝쿨영상.mp4"
+              loop
+              muted
+              playsinline
+              preload="metadata"
+            ></video>
+            <span class="comp-name">Laces</span>
+            <span class="comp-meta">Vine</span>
+          </div>
+
+          <div class="grid-item" data-id="castle" data-category="support">
+            <video
+              class="grid-thumb"
+              src="../../images/성영상.mp4"
+              loop
+              muted
+              playsinline
+              preload="metadata"
+            ></video>
+            <span class="comp-name">Heel Counter</span>
+            <span class="comp-meta">Castle</span>
+          </div>
+          <div class="grid-item" data-id="pudding" data-category="connection">
+            <video
+              class="grid-thumb"
+              src="../../images/젤리영상.mp4"
+              loop
+              muted
+              playsinline
+              preload="metadata"
+            ></video>
+            <span class="comp-name">Padding</span>
+            <span class="comp-meta">Jelly</span>
+          </div>
+          <div class="grid-item" data-id="lock" data-category="connection">
+            <video
+              class="grid-thumb"
+              src="../../images/자물쇠영상.mp4"
+              loop
+              muted
+              playsinline
+              preload="metadata"
+            ></video>
+            <span class="comp-name">Extra Eyelet</span>
+            <span class="comp-meta">Lock</span>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const gridItems = document.querySelectorAll(".archive-grid .grid-item");
+        const filterButtons = document.querySelectorAll(
+          "#filterSection button",
+        );
+
+        gridItems.forEach((item) => {
+          const video = item.querySelector(".grid-thumb");
+          if (!video) return;
+
+          item.addEventListener("mouseenter", () => {
+            video.currentTime = 0;
+            video.play().catch(() => {});
+          });
+
+          item.addEventListener("mouseleave", () => {
+            video.pause();
+            video.currentTime = 0;
+          });
+        });
+
+        // 필터 버튼 클릭 시 카테고리에 맞는 카드만 표시
+        filterButtons.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            filterButtons.forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+
+            const filter = btn.getAttribute("data-filter");
+
+            gridItems.forEach((item) => {
+              const category = item.getAttribute("data-category");
+              const show = filter === "all" || category === filter;
+              item.style.display = show ? "flex" : "none";
+            });
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
