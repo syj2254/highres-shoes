@@ -28,7 +28,7 @@ body {
   display: flex;
   align-items: center;
   height: 11vh;
-  padding: 0 50px;
+  padding: 0 3.125rem;
 }
 .archive-hero h1 {
   margin: 0;
@@ -37,24 +37,24 @@ body {
   line-height: 1;
   color: #111;
   text-transform: uppercase;
-  letter-spacing: -2px;
+  letter-spacing: -0.125rem;
 }
 
 .filter-section {
   display: flex;
   flex-shrink: 0;
-  gap: 12px;
-  padding: 12px 50px;
+  gap: 0.75rem;
+  padding: 0.75rem 3.125rem;
 }
 .filter-section button {
-  padding: 8px 20px;
-  font-size: 14px;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.875rem;
   font-weight: 600;
   color: #111;
   cursor: pointer;
   background-color: transparent;
   border: 1px solid #111;
-  border-radius: 30px;
+  border-radius: 1.875rem;
   transition: all 0.3s ease;
 }
 .filter-section button:focus, .filter-section button:focus-visible {
@@ -78,9 +78,9 @@ body {
   flex: 1;
   grid-template-rows: repeat(3, 1fr);
   grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  gap: 1rem;
   min-height: 0;
-  padding: 0 50px 20px 50px;
+  padding: 0 3.125rem 1.25rem 3.125rem;
 }
 .archive-grid .grid-item {
   position: relative;
@@ -89,18 +89,18 @@ body {
   align-items: flex-end;
   justify-content: space-between;
   min-height: 0;
-  padding: 18px;
+  padding: 1.125rem;
   overflow: hidden;
   cursor: pointer;
   background-color: #fff;
   border: 1px solid rgba(0, 0, 0, 0.04);
-  border-radius: 15px;
+  border-radius: 0.9375rem;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.04);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .archive-grid .grid-item:hover {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-  transform: translateY(-4px);
+  transform: translateY(-0.25rem);
 }
 .archive-grid .grid-item .grid-thumb {
   position: absolute;
@@ -128,13 +128,13 @@ body {
 }
 .archive-grid .grid-item .comp-name {
   margin: 0;
-  font-size: 15px;
+  font-size: 0.9375rem;
   font-weight: bold;
   color: #fff;
 }
 .archive-grid .grid-item .comp-meta {
   margin: 0;
-  font-size: 12px;
+  font-size: 0.75rem;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.8);
 }

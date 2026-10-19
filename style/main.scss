@@ -1,6 +1,18 @@
-// 전역 레이아웃 안정화: 스크롤 유무와 관계없이 스크롤바 공간을 항상 예약
+@use "sass:math";
+
+// px → rem 변환 (16px 기준). 숫자는 기존 px 값 그대로 쓰면 됨
+@function px2rem($px) {
+  @return math.div($px, 16) * 1rem;
+}
+
+// 반응형 기준: rem 하나가 화면 크기에 맞춰 같이 커지고 작아짐
+// - 노트북(약 1440x800 이하): 16px → 기존 크기 그대로
+// - 27인치 아이맥(약 2560x1300): 약 26px → 전체가 약 1.6배
+// 가로/세로 중 더 빡빡한 쪽에 맞춰서 커지므로 화면 밖으로 넘치지 않음
 html {
+  // 스크롤 유무와 관계없이 스크롤바 공간을 항상 예약
   scrollbar-gutter: stable;
+  font-size: clamp(16px, min(1.111vw, 2vh), 30px);
 }
 
 // 공통 스타일
@@ -10,7 +22,7 @@ body {
   font-family: "Helvetica Neue", Arial, sans-serif;
   background-color: #fbfbfb;
   background-image: radial-gradient(#d1d1d1 1px, transparent 1px);
-  background-size: 24px 24px;
+  background-size: px2rem(24) px2rem(24);
 }
 
 // 글로벌 헤더 스타일
@@ -20,18 +32,18 @@ header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  padding: 26px 50px 30px 20px;
+  padding: px2rem(26) px2rem(50) px2rem(30) px2rem(20);
   pointer-events: none;
   background-color: transparent;
 
   .logo {
     display: inline-block;
-    padding: 9px 22px;
-    font-size: 20px;
+    padding: px2rem(9) px2rem(22);
+    font-size: px2rem(20);
     font-weight: 900;
     color: #fff;
     text-transform: uppercase;
-    letter-spacing: -0.5px;
+    letter-spacing: px2rem(1.5);
     text-decoration: none;
     pointer-events: auto;
     background-color: #000;
@@ -59,7 +71,7 @@ header {
   }
 
   nav {
-    padding-top: 10px;
+    padding-top: px2rem(10);
 
     ul {
       display: flex;
@@ -69,10 +81,10 @@ header {
       list-style: none;
 
       li {
-        margin-left: 40px;
+        margin-left: px2rem(40);
 
         a {
-          font-size: 16px;
+          font-size: px2rem(16);
           font-weight: bold;
           color: #000;
           text-decoration: none;
@@ -96,7 +108,7 @@ header {
   font-weight: 900;
   color: rgba(0, 0, 0, 0.03);
   text-transform: uppercase;
-  letter-spacing: -3px;
+  letter-spacing: px2rem(-3);
   white-space: nowrap;
   pointer-events: none;
   transform: translate(-50%, -50%);
@@ -116,7 +128,7 @@ header {
     z-index: 10;
     box-sizing: border-box;
     display: flex;
-    height: calc(100vh - 90px);
+    height: calc(100vh - #{px2rem(90)});
   }
 
   .circular-menu-container {
@@ -128,50 +140,64 @@ header {
     .item-desc {
       position: absolute;
       top: 50%;
-      left: 30px;
+      left: px2rem(30);
       z-index: 10;
-      width: 230px;
+      width: px2rem(230);
       transform: translateY(-50%);
 
       .label-detail {
         display: block;
-        margin-bottom: 12px;
-        font-size: 11px;
+        margin-bottom: px2rem(12);
+        font-size: px2rem(11);
         font-weight: 800;
         color: #999;
-        letter-spacing: 2px;
+        letter-spacing: px2rem(2);
       }
 
       h2 {
         margin-top: 0;
-        margin-bottom: 20px;
-        font-size: 42px;
+        margin-bottom: px2rem(20);
+        font-size: px2rem(42);
         font-weight: 900;
         line-height: 1.1;
-        letter-spacing: -1px;
+        letter-spacing: px2rem(-1);
         word-break: keep-all;
       }
 
       p {
-        padding-left: 15px;
+        position: relative;
+        padding-left: px2rem(15);
         margin-bottom: 0;
-        font-size: 15px;
+        font-size: px2rem(15);
         line-height: 1.6;
         color: #555;
         word-break: keep-all;
-        border-left: 2px solid #000;
+
+        // border-left 대신 ::before로 바를 그려서, line-height의 위아래 여백만큼
+        // 텍스트 영역보다 길어 보이던 문제를 해결(텍스트 높이에 맞춰 살짝 안쪽으로 당김)
+        &::before {
+          position: absolute;
+          top: 0.37em;
+          bottom: 0.37em;
+          left: 0;
+          width: 2px;
+          content: "";
+          background-color: #000;
+        }
       }
 
+      // 드래그 안내 뱃지 — 기존(예전) 스타일 그대로, 드롭 이후에도 계속 노출됨
       .drag-hint {
         display: inline-block;
-        padding: 10px 20px;
-        margin-top: 40px;
-        font-size: 13px;
+        padding: px2rem(10) px2rem(20);
+        margin-top: px2rem(40);
+        font-size: px2rem(13);
         font-weight: bold;
         color: #fff;
+        white-space: nowrap;
         pointer-events: none;
         background-color: #000;
-        border-radius: 30px;
+        border-radius: px2rem(30);
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
         animation: pointRight 1.5s infinite ease-in-out;
 
@@ -181,7 +207,7 @@ header {
             transform: translateX(0);
           }
           50% {
-            transform: translateX(8px);
+            transform: translateX(px2rem(8));
           }
         }
       }
@@ -190,11 +216,11 @@ header {
     .circular-menu {
       position: absolute;
       top: 55%;
-      left: -450px;
+      left: px2rem(-450);
       z-index: 1;
-      width: 800px;
-      height: 800px;
-      margin-top: -400px;
+      width: px2rem(800);
+      height: px2rem(800);
+      margin-top: px2rem(-400);
       border: 1px solid #ccc;
       border-radius: 50%;
       transform-origin: center;
@@ -202,10 +228,10 @@ header {
 
       &::before {
         position: absolute;
-        top: 25px;
-        right: 25px;
-        bottom: 25px;
-        left: 25px;
+        top: px2rem(25);
+        right: px2rem(25);
+        bottom: px2rem(25);
+        left: px2rem(25);
         pointer-events: none;
         content: "";
         border: 1px dashed rgba(0, 0, 0, 0.1);
@@ -219,10 +245,10 @@ header {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 80px;
-        height: 80px;
-        margin-top: -40px;
-        margin-left: -40px;
+        width: px2rem(80);
+        height: px2rem(80);
+        margin-top: px2rem(-40);
+        margin-left: px2rem(-40);
 
         // 클릭은 모든 원에서 가능하도록 허용 (드래그는 JS의 active 체크로 별도 제한)
         pointer-events: auto;
@@ -271,14 +297,17 @@ header {
 
         &.active {
           z-index: 2;
-          width: 130px;
-          height: 130px;
-          margin-top: -65px;
-          margin-left: -65px;
+          width: px2rem(130);
+          height: px2rem(130);
+          margin-top: px2rem(-65);
+          margin-left: px2rem(-65);
           cursor: grab;
           background-color: #fff;
           border: 1px solid #000;
           box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+
+          // "잡을 수 있다"는 신호를 주는 펄스 링
+          animation: activeItemPulse 2.2s infinite;
 
           &:active {
             cursor: grabbing;
@@ -319,15 +348,19 @@ header {
     justify-content: center;
     width: 65%;
     height: 100%;
-    padding: 20px 20px 20px 0;
+    padding: px2rem(20) px2rem(20) px2rem(20) 0;
 
     .canvas-stack {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: px2rem(14);
       align-items: center;
       justify-content: center;
-      width: 100%;
+
+      // 가로는 꽉 채우되, 세로로 넘치지 않게(영상 + 은유 패널이 한 화면에 들어오게) 상한을 둠
+      // 85vh - 144px(여백/간격/패널 여유) 높이 기준으로 16:9 가로폭 계산
+      // 영상 박스와 아래 패널이 같은 폭이 되도록 둘을 감싸는 stack에 적용
+      width: min(100%, calc((85vh - #{px2rem(144)}) * 16 / 9));
       height: 100%;
     }
 
@@ -338,13 +371,12 @@ header {
       align-items: center;
       justify-content: center;
       width: 100%;
-      max-height: 85vh;
       aspect-ratio: 16 / 9;
       overflow: hidden;
 
       background-color: #fff;
       border: 1px solid rgba(0, 0, 0, 0.04);
-      border-radius: 30px;
+      border-radius: px2rem(30);
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.03);
       transition: all 0.3s ease;
 
@@ -371,6 +403,52 @@ header {
       video.silhouette.flip {
         transform: scaleX(-1);
       }
+
+      // 드롭존 전체를 덮는 어두운 반투명 오버레이 + 정중앙 텍스트
+      .drop-target-hint {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        display: flex;
+        gap: px2rem(8);
+        align-items: center;
+        justify-content: center;
+        font-size: px2rem(13);
+        font-weight: bold;
+        color: #fff;
+        pointer-events: none;
+        background-color: rgba(0, 0, 0, 0.38);
+        transition: opacity 0.4s ease;
+
+        svg {
+          flex-shrink: 0;
+          color: #fff;
+        }
+
+        .drop-icon {
+          width: px2rem(34);
+          height: px2rem(34);
+          animation: dropIconBounce 1.4s infinite ease-in-out;
+        }
+
+        &.fade-out {
+          opacity: 0;
+        }
+      }
+
+      &.drag-over .drop-target-hint {
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+
+      @keyframes dropIconBounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(px2rem(6));
+        }
+      }
     }
 
     .metaphor-panel {
@@ -378,30 +456,115 @@ header {
       flex-shrink: 0;
       width: 100%;
       max-height: 15vh;
-      padding: 16px 24px;
+      padding: px2rem(16) px2rem(24);
       overflow-y: auto;
       background-color: #fff;
       border: 1px solid rgba(0, 0, 0, 0.04);
-      border-radius: 20px;
+      border-radius: px2rem(20);
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.03);
 
       .label-detail {
         display: block;
-        margin-bottom: 6px;
-        font-size: 10px;
+        margin-bottom: px2rem(6);
+        font-size: px2rem(10);
         font-weight: 800;
         color: #999;
-        letter-spacing: 2px;
+        letter-spacing: px2rem(2);
       }
 
       p {
         margin: 0;
-        font-size: 13px;
+        font-size: px2rem(13);
         line-height: 1.5;
         color: #333;
         word-break: keep-all;
         transition: opacity 0.3s ease;
       }
     }
+  }
+}
+
+// 첫 진입 안내 데모 (오브젝트를 끌어다 캔버스에 놓는 모습을 보여주는 오버레이)
+.intro-demo {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  pointer-events: none; // 화면을 막지 않음: 안내 중에도 바로 직접 끌어볼 수 있음
+  background-color: rgba(0, 0, 0, 0.32); // 연한 어두운 배경
+  opacity: 0;
+  transition: opacity 0.4s ease;
+
+  &.is-on {
+    opacity: 1;
+  }
+
+  // 드롭 목표 영역 표시 (캔버스 박스 위치에 JS로 맞춤)
+  .intro-target {
+    position: fixed;
+    box-sizing: border-box;
+    pointer-events: none;
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 2px dashed rgba(255, 255, 255, 0.9);
+    border-radius: px2rem(30);
+  }
+
+  // 끌려가는 오브젝트 (활성 오브젝트 복제본)
+  .intro-ghost {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    background-color: #fff;
+    border: 1px solid #000;
+    border-radius: 50%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+
+    img {
+      width: 85%;
+      height: 85%;
+      object-fit: contain;
+    }
+
+    // 마우스 커서: 화살표 끝이 오브젝트 중앙에 오도록 배치
+    .intro-cursor {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 34%;
+      height: auto;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+    }
+  }
+
+  .intro-skip {
+    position: fixed;
+    bottom: 4vh;
+    left: 50%;
+    font-size: px2rem(12);
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.75);
+    letter-spacing: px2rem(1);
+    pointer-events: none;
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes activeItemPulse {
+  0% {
+    box-shadow:
+      0 6px 15px rgba(0, 0, 0, 0.08),
+      0 0 0 0 rgba(0, 0, 0, 0.12);
+  }
+  70% {
+    box-shadow:
+      0 6px 15px rgba(0, 0, 0, 0.08),
+      0 0 0 px2rem(14) rgba(0, 0, 0, 0);
+  }
+  100% {
+    box-shadow:
+      0 6px 15px rgba(0, 0, 0, 0.08),
+      0 0 0 0 rgba(0, 0, 0, 0);
   }
 }

@@ -1,3 +1,10 @@
+@use "sass:math";
+
+// px → rem 변환 (16px 기준). 숫자는 기존 px 값 그대로 쓰면 됨
+@function px2rem($px) {
+  @return math.div($px, 16) * 1rem;
+}
+
 // 어바웃 페이지 전용 워터마크 고정
 .about-container .bg-watermark {
   opacity: 0.03; // 항상 고정 투명도
@@ -9,7 +16,7 @@
   display: flex;
   align-items: center;
   height: 50vh;
-  padding: 0 50px;
+  padding: 0 px2rem(50);
   background-color: transparent;
 
   h1 {
@@ -19,21 +26,21 @@
     line-height: 0.9;
     color: #111;
     text-transform: uppercase;
-    letter-spacing: -3px;
+    letter-spacing: px2rem(-3);
   }
 }
 
 // 본문 내용 래퍼
 .content-wrapper {
-  padding: 0 50px;
-  margin-top: 20px;
-  margin-bottom: 120px;
+  padding: 0 px2rem(50);
+  margin-top: px2rem(20);
+  margin-bottom: px2rem(120);
 }
 
 // 각 단락(행) 공통 스타일
 .content-row {
   display: flex;
-  padding: 60px 0;
+  padding: px2rem(60) 0;
   border-top: 2px solid #111; // 얇은 선 대신 메인과 어울리는 단단한 두께
 
   &.no-border {
@@ -44,19 +51,19 @@
   .row-title {
     box-sizing: border-box;
     width: 25%;
-    padding-right: 40px;
+    padding-right: px2rem(40);
 
     h2 {
       // 메인 페이지의 drag-hint 스타일(블랙 캡슐) 차용하여 통일감 부여
       display: inline-block;
-      padding: 10px 20px;
+      padding: px2rem(10) px2rem(20);
       margin: 0;
-      font-size: 13px;
+      font-size: px2rem(13);
       font-weight: bold;
       color: #fff;
-      letter-spacing: 1px;
+      letter-spacing: px2rem(1);
       background-color: #000;
-      border-radius: 30px;
+      border-radius: px2rem(30);
     }
   }
 
@@ -65,16 +72,25 @@
     width: 75%;
 
     p {
-      padding-left: 15px;
+      position: relative;
+      padding-left: px2rem(15);
       margin-top: 0;
-      margin-bottom: 24px;
-      font-size: 15px;
+      margin-bottom: px2rem(24);
+      font-size: px2rem(15);
       line-height: 1.7;
       color: #444;
       word-break: keep-all;
 
-      // 메인페이지의 설명글 좌측 데코 라인 스타일 차용
-      border-left: 2px solid #000;
+      // border-left 대신 ::before로 바를 그려서 텍스트 높이에 맞게 조절
+      &::before {
+        position: absolute;
+        top: 0.37em;
+        bottom: 0.37em;
+        left: 0;
+        width: 2px;
+        content: "";
+        background-color: #000;
+      }
 
       &:last-child {
         margin-bottom: 0;
@@ -84,27 +100,28 @@
     // 72 DPI vs 300 DPI 디자인
     .dpi-visual {
       display: flex;
-      gap: 120px;
-      margin-top: 60px;
+      gap: px2rem(120);
+      margin-top: px2rem(60);
 
       .dpi-item {
         .dpi-number {
-          margin-bottom: 15px;
-          font-size: 64px;
+          margin-bottom: px2rem(15);
+          font-size: px2rem(64);
           font-weight: 900;
           line-height: 1;
           color: #111;
-          letter-spacing: -2px;
+          letter-spacing: px2rem(-2);
 
           span {
-            margin-left: 5px;
-            font-size: 20px;
+            margin-left: px2rem(5);
+            font-size: px2rem(20);
             font-weight: bold;
+            letter-spacing: px2rem(0.3);
           }
         }
 
         .dpi-text {
-          font-size: 13px;
+          font-size: px2rem(13);
           font-weight: 500;
           line-height: 1.6;
           color: #666;
@@ -116,8 +133,8 @@
     .image-gallery {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
-      gap: 20px;
-      margin-top: 60px;
+      gap: px2rem(20);
+      margin-top: px2rem(60);
 
       .gallery-item {
         width: 100%;
@@ -129,7 +146,7 @@
         background-position: center;
         background-size: cover;
         border: 1px solid rgba(0, 0, 0, 0.04);
-        border-radius: 15px; // 각진 모서리를 둥글게
+        border-radius: px2rem(15); // 각진 모서리를 둥글게
         box-shadow: 0 15px 35px rgba(0, 0, 0, 0.04);
         transition:
           transform 0.3s ease,
@@ -137,7 +154,9 @@
 
         &:hover {
           box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-          transform: translateY(-5px); // 마우스 오버 시 살짝 떠오르는 효과
+          transform: translateY(
+            px2rem(-5)
+          ); // 마우스 오버 시 살짝 떠오르는 효과
         }
       }
     }

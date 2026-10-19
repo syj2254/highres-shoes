@@ -29,7 +29,9 @@
             <p id="componentDesc">
               표면에 밀착하여 미끄러지지 않게 잡아주는 흡착 구조
             </p>
-            <div class="drag-hint">오브젝트를 캔버스로 드래그 ➔</div>
+            <div class="drag-hint" id="dragHint">
+              오브젝트를 캔버스로 드래그 ➔
+            </div>
           </div>
 
           <div class="circular-menu" id="circularMenu">
@@ -76,6 +78,36 @@
         <section class="center-image-container">
           <div class="canvas-stack">
             <div class="image-wrapper" id="dropZone">
+              <!-- 영상이 재생 중이 아닐 때만 보이는 타겟 안내 레이어 -->
+              <div class="drop-target-hint" id="dropTargetHint">
+                <svg
+                  class="drop-icon"
+                  width="34"
+                  height="34"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                >
+                  <rect
+                    x="3"
+                    y="3"
+                    width="18"
+                    height="18"
+                    rx="4"
+                    stroke="currentColor"
+                    stroke-width="1.6"
+                    stroke-dasharray="3 3"
+                  />
+                  <path
+                    d="M12 8V15M12 15L9 12M12 15L15 12"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                <span>여기에 드롭하면 영상이 재생돼요</span>
+              </div>
+
               <!-- 기본 이미지 -->
               <img
                 src="images/신발실루엣.svg"
@@ -110,6 +142,24 @@
       </main>
     </div>
 
+    <!-- 첫 진입 안내 데모: 오브젝트를 끌어다 캔버스에 놓는 모습을 보여주는 오버레이 -->
+    <div class="intro-demo" id="introDemo" aria-hidden="true">
+      <div class="intro-target" id="introTarget"></div>
+      <div class="intro-ghost" id="introGhost">
+        <img alt="" />
+        <svg class="intro-cursor" viewBox="0 0 24 24">
+          <path
+            d="M5 3l14 8-6 2 4 7-3 1.5-4-7-5 4z"
+            fill="#000"
+            stroke="#fff"
+            stroke-width="1.5"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+      <div class="intro-skip">직접 끌어다 놓아보세요</div>
+    </div>
+
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const menu = document.getElementById("circularMenu");
@@ -124,11 +174,13 @@
         const metaphorText = document.getElementById("metaphorText");
         const bgWatermark = document.getElementById("bgWatermark");
         const dropZone = document.getElementById("dropZone");
+        const dropTargetHint = document.getElementById("dropTargetHint");
         const mainContainer = document.querySelector(
           ".circular-menu-container",
         );
 
-        const radius = 400;
+        // 원형 메뉴 반지름: 화면 크기(rem)에 맞춰 커지는 메뉴 실제 크기에서 계산
+        const getRadius = () => menu.clientWidth / 2;
         const angleIncrement = 360 / items.length;
         let currentRotation = 0;
         let activeIndex = 5;
@@ -231,6 +283,7 @@
         });
 
         function updatePositions(rotation) {
+          const radius = getRadius();
           menu.style.transform = `rotate(${rotation}deg)`;
           items.forEach((item, i) => {
             let angle = baseAngles[i];
@@ -259,6 +312,11 @@
 
         updatePositions(currentRotation);
         updateActiveItem(activeIndex);
+
+        // 창 크기가 바뀌면(개발자도구 해상도 변경 포함) 원형 메뉴 위치를 다시 계산
+        window.addEventListener("resize", () =>
+          updatePositions(currentRotation),
+        );
 
         mainContainer.addEventListener("wheel", (e) => {
           e.preventDefault();
@@ -349,7 +407,142 @@
           // 드롭 시에만 은유 설명 패널을 채우고 표시
           metaphorText.textContent = currentData.metaphor;
           metaphorPanel.style.display = "block";
+
+          // 영상이 재생되는 동안은 드롭 안내 오버레이를 항상 숨김
+          dropTargetHint.classList.add("fade-out");
         });
+
+        // ===== 첫 진입 안내 데모 =====
+        // 활성 오브젝트를 캔버스로 끌어다 놓는 모습을 반복해서 보여주다가,
+        // 사람이 직접 오브젝트를 잡거나 끌면(시도하면) 사라짐. (실제 드롭 동작은 일어나지 않음)
+        const introDemo = document.getElementById("introDemo");
+        const introGhost = document.getElementById("introGhost");
+        const introTarget = document.getElementById("introTarget");
+        let introClosed = false;
+        let introAnims = [];
+
+        const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+        // 애니메이션 실행 헬퍼 (건너뛰기로 취소돼도 에러 없이 넘어가도록 처리)
+        const playAnim = (el, keyframes, options) => {
+          const anim = el.animate(keyframes, { fill: "forwards", ...options });
+          introAnims.push(anim);
+          return anim.finished.catch(() => {});
+        };
+
+        function closeIntro() {
+          if (introClosed) return;
+          introClosed = true;
+          introAnims.forEach((anim) => anim.cancel());
+          introDemo.classList.remove("is-on");
+          setTimeout(() => introDemo.remove(), 450);
+        }
+
+        async function runIntroDemo() {
+          // 원형 메뉴가 제자리로 돌아올 때까지 잠깐 대기
+          await wait(1100);
+          if (introClosed) return;
+
+          const activeItem = document.querySelector(".menu-item.active");
+          const from = activeItem.getBoundingClientRect();
+          const to = dropZone.getBoundingClientRect();
+
+          // 데모용 오브젝트(현재 활성 오브젝트 이미지)와 드롭 타겟 위치 세팅
+          introGhost.querySelector("img").src =
+            activeItem.querySelector("img").src;
+          Object.assign(introGhost.style, {
+            left: `${from.left}px`,
+            top: `${from.top}px`,
+            width: `${from.width}px`,
+            height: `${from.height}px`,
+          });
+          Object.assign(introTarget.style, {
+            left: `${to.left}px`,
+            top: `${to.top}px`,
+            width: `${to.width}px`,
+            height: `${to.height}px`,
+          });
+
+          const dx = to.left + to.width / 2 - (from.left + from.width / 2);
+          const dy = to.top + to.height / 2 - (from.top + from.height / 2);
+
+          introDemo.classList.add("is-on");
+
+          // 사람이 직접 시도하기 전까지는 계속 반복
+          while (!introClosed) {
+            introAnims.forEach((anim) => anim.cancel());
+            introAnims = [];
+
+            await playAnim(
+              introGhost,
+              [
+                { opacity: 0, transform: "translate(0, 0) scale(1)" },
+                { opacity: 1, transform: "translate(0, 0) scale(1)" },
+              ],
+              { duration: 350 },
+            );
+            await wait(450);
+            if (introClosed) return;
+
+            // 꾹 잡는 느낌으로 살짝 작아졌다가
+            await playAnim(
+              introGhost,
+              [
+                { transform: "translate(0, 0) scale(1)" },
+                { transform: "translate(0, 0) scale(0.92)" },
+              ],
+              { duration: 180 },
+            );
+            if (introClosed) return;
+
+            // 캔버스 중앙으로 끌고 감
+            await playAnim(
+              introGhost,
+              [
+                { transform: "translate(0, 0) scale(0.92)" },
+                { transform: `translate(${dx}px, ${dy}px) scale(0.92)` },
+              ],
+              { duration: 1500, easing: "cubic-bezier(0.65, 0, 0.35, 1)" },
+            );
+            if (introClosed) return;
+
+            // 놓는 순간: 타겟이 반짝하고 오브젝트가 사라짐
+            playAnim(
+              introTarget,
+              [
+                { backgroundColor: "rgba(255, 255, 255, 0.08)" },
+                { backgroundColor: "rgba(255, 255, 255, 0.35)" },
+                { backgroundColor: "rgba(255, 255, 255, 0.08)" },
+              ],
+              { duration: 700 },
+            );
+            await playAnim(
+              introGhost,
+              [
+                {
+                  opacity: 1,
+                  transform: `translate(${dx}px, ${dy}px) scale(0.92)`,
+                },
+                {
+                  opacity: 0,
+                  transform: `translate(${dx}px, ${dy}px) scale(0.6)`,
+                },
+              ],
+              { duration: 500 },
+            );
+            await wait(1000);
+          }
+        }
+
+        // 사람이 직접 시도하는 순간(오브젝트 잡기/드래그/휠로 메뉴 돌리기) 안내 종료
+        mainContainer.addEventListener("pointerdown", closeIntro, {
+          passive: true,
+        });
+        mainContainer.addEventListener("wheel", closeIntro, { passive: true });
+        document.addEventListener("dragstart", closeIntro);
+        window.addEventListener("resize", closeIntro, { once: true });
+
+        runIntroDemo();
       });
     </script>
   </body>
