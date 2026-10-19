@@ -269,3 +269,7 @@ header nav ul li a.active {
 .components-container .content-wrapper .right-section .info-card .info-footer .view-film-link:hover {
   opacity: 0.6;
 }
+.components-container .content-wrapper .right-section .info-card .info-footer .view-film-link.disabled {
+  pointer-events: none;
+  opacity: 0.3;
+}

@@ -310,6 +310,57 @@
           });
         }
 
+        // 원하는 오브젝트가 활성 위치에 오도록 원형 메뉴를 가까운 방향으로 회전
+        function goToIndex(index) {
+          if (index === activeIndex) return;
+
+          let diff = index - activeIndex;
+          const halfLength = items.length / 2;
+
+          if (diff > halfLength) {
+            diff -= items.length;
+          } else if (diff < -halfLength) {
+            diff += items.length;
+          }
+
+          currentRotation -= diff * angleIncrement;
+          activeIndex = index;
+
+          updatePositions(currentRotation);
+          updateActiveItem(activeIndex);
+        }
+
+        // 해당 오브젝트의 영상 재생 + 텍스트/워터마크/은유 패널 갱신
+        // (드롭할 때와, 컴포넌트 페이지의 View Film으로 들어왔을 때 공통으로 사용)
+        function playComponent(id) {
+          const currentData = componentsData[id];
+          if (!currentData) return;
+
+          silhouetteImg.style.display = "none";
+          silhouetteVid.style.display = "block";
+          silhouetteVid.src = currentData.video;
+          silhouetteVid.currentTime = 0;
+          silhouetteVid.play().catch(() => {});
+
+          // 에어캡, 우산 영상만 좌우반전 제외
+          silhouetteVid.classList.toggle(
+            "flip",
+            !flipTargets.includes(currentData.video),
+          );
+
+          // 텍스트 및 워터마크 업데이트
+          componentName.textContent = currentData.name;
+          componentDesc.textContent = currentData.desc;
+          bgWatermark.textContent = currentData.name;
+
+          // 은유 설명 패널을 채우고 표시
+          metaphorText.textContent = currentData.metaphor;
+          metaphorPanel.style.display = "block";
+
+          // 영상이 재생되는 동안은 드롭 안내 오버레이를 항상 숨김
+          dropTargetHint.classList.add("fade-out");
+        }
+
         updatePositions(currentRotation);
         updateActiveItem(activeIndex);
 
@@ -347,24 +398,7 @@
           });
 
           // 클릭으로도 오브젝트 선택(회전) 가능 — 영상은 재생하지 않음
-          item.addEventListener("click", () => {
-            if (index === activeIndex) return;
-
-            let diff = index - activeIndex;
-            const halfLength = items.length / 2;
-
-            if (diff > halfLength) {
-              diff -= items.length;
-            } else if (diff < -halfLength) {
-              diff += items.length;
-            }
-
-            currentRotation -= diff * angleIncrement;
-            activeIndex = index;
-
-            updatePositions(currentRotation);
-            updateActiveItem(activeIndex);
-          });
+          item.addEventListener("click", () => goToIndex(index));
         });
 
         dropZone.addEventListener("dragover", (e) => {
@@ -383,33 +417,8 @@
           const draggedId = e.dataTransfer.getData("id");
           if (!draggedId) return;
 
-          const currentData = componentsData[draggedId];
-          if (!currentData) return;
-
           // 모든 아이템 드롭 시 해당 비디오를 재생하도록 연동
-          silhouetteImg.style.display = "none";
-          silhouetteVid.style.display = "block";
-          silhouetteVid.src = currentData.video;
-          silhouetteVid.currentTime = 0;
-          silhouetteVid.play().catch(() => {});
-
-          // 에어캡, 우산 영상만 좌우반전 제외
-          silhouetteVid.classList.toggle(
-            "flip",
-            !flipTargets.includes(currentData.video),
-          );
-
-          // 텍스트 및 워터마크 업데이트
-          componentName.textContent = currentData.name;
-          componentDesc.textContent = currentData.desc;
-          bgWatermark.textContent = currentData.name;
-
-          // 드롭 시에만 은유 설명 패널을 채우고 표시
-          metaphorText.textContent = currentData.metaphor;
-          metaphorPanel.style.display = "block";
-
-          // 영상이 재생되는 동안은 드롭 안내 오버레이를 항상 숨김
-          dropTargetHint.classList.add("fade-out");
+          playComponent(draggedId);
         });
 
         // ===== 첫 진입 안내 데모 =====
@@ -542,7 +551,21 @@
         document.addEventListener("dragstart", closeIntro);
         window.addEventListener("resize", closeIntro, { once: true });
 
-        runIntroDemo();
+        // 컴포넌트 페이지의 View Film으로 들어온 경우(?play=오브젝트id):
+        // 해당 오브젝트로 메뉴를 돌리고 영상을 바로 재생 (이때는 안내 데모 생략)
+        const playParam = new URLSearchParams(window.location.search).get(
+          "play",
+        );
+        if (playParam && componentsData[playParam]) {
+          const targetIndex = Array.from(items).findIndex(
+            (item) => item.getAttribute("data-id") === playParam,
+          );
+          if (targetIndex !== -1) goToIndex(targetIndex);
+          playComponent(playParam);
+          closeIntro();
+        } else {
+          runIntroDemo();
+        }
       });
     </script>
   </body>

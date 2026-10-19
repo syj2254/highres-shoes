@@ -108,7 +108,10 @@
             <!-- 하단 미니 프리뷰 박스 및 링크 -->
             <div class="info-footer">
               <div class="mini-preview-box"></div>
-              <a href="#" class="view-film-link">View Film &rarr;</a>
+              <!-- 부품을 선택하면 메인페이지로 이동해서 해당 영상이 바로 재생됨 -->
+              <a href="#" class="view-film-link disabled" id="viewFilmLink"
+                >View Film &rarr;</a
+              >
             </div>
           </div>
         </section>
@@ -237,6 +240,28 @@
       const compDesc1 = document.getElementById("compDesc1");
       const compDesc2 = document.getElementById("compDesc2");
       const shoeSilhouette = document.getElementById("shoeSilhouette");
+      const viewFilmLink = document.getElementById("viewFilmLink");
+
+      // 컴포넌트 페이지 key → 메인페이지 오브젝트(data-id) 매칭
+      const mainIdMap = {
+        outsole: "octopus",
+        "toe-box": "turtle",
+        upper: "belt",
+        laces: "tape",
+        "sole-unit": "cake",
+        padding: "pudding",
+        "mid-sole": "bubblewrap",
+        tongue: "marshmallow",
+        foxing: "egg",
+        "extra-eyelet": "lock",
+        "heel-counter": "castle",
+        quarter: "bone",
+      };
+
+      // 선택된 부품이 없을 때는 View Film 이동 막기
+      viewFilmLink.addEventListener("click", (e) => {
+        if (viewFilmLink.classList.contains("disabled")) e.preventDefault();
+      });
 
       checkboxes.forEach((checkbox) => {
         checkbox.addEventListener("change", (e) => {
@@ -258,6 +283,10 @@
               if (data.svg) {
                 shoeSilhouette.src = data.svg;
               }
+
+              // View Film → 메인페이지로 이동하면서 해당 영상 재생
+              viewFilmLink.href = `../../index.html?play=${mainIdMap[key]}`;
+              viewFilmLink.classList.remove("disabled");
             }
           }
           // 체크 해제 시에도 강제로 다시 체크하지 않음 — 전부 해제된 초기 상태 허용

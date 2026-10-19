@@ -335,6 +335,12 @@ header {
             &:hover {
               opacity: 0.6;
             }
+
+            // 아직 부품을 선택하지 않았을 때는 눌러도 이동하지 않음
+            &.disabled {
+              pointer-events: none;
+              opacity: 0.3;
+            }
           }
         }
       }
